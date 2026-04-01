@@ -10,6 +10,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
     }
 
+    // Si ya existe un pending para este email, reutilizarlo
+    const { data: existing } = await supabaseServer
+      .from('tickets')
+      .select('id')
+      .eq('email_comprador', email)
+      .eq('estado_pago', 'pending')
+      .single();
+
+    if (existing) {
+      const initPointUrl = await requestPreference(nombre, email, existing.id);
+      return NextResponse.json({ url: initPointUrl });
+    }
+
+    // Si no existe, crear uno nuevo
     const { data: ticket, error: dbError } = await supabaseServer
       .from('tickets')
       .insert({
