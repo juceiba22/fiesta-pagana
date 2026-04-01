@@ -6,7 +6,6 @@ const client = new MercadoPagoConfig({
 
 export const requestPreference = async (name: string, email: string) => {
 
-    console.log("SITE URL:", process.env.NEXT_PUBLIC_SITE_URL);
     const preference = new Preference(client);
 
     try {
@@ -26,12 +25,12 @@ export const requestPreference = async (name: string, email: string) => {
                     email,
                 },
                 back_urls: {
-                    success: `http://localhost:3000/success`,
-                    failure: `http://localhost:3000/`,
-                    pending: `http://localhost:3000/`,
+                    success: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
+                    failure: `${process.env.NEXT_PUBLIC_SITE_URL}/`,
+                    pending: `${process.env.NEXT_PUBLIC_SITE_URL}/`,
                 },
                 auto_return: 'all',
-                notification_url: `http://localhost:3000/api/webhook`,
+                notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhook`,
                 external_reference: email // Guardaremos el email para identificar la transacción en el webhook
             }
         });
