@@ -16,7 +16,7 @@ export const requestPreference = async (name: string, email: string) => {
                         id: 'TICKET_FIESTA_PAGANA_01',
                         title: 'Entrada General - Fiesta Pagana',
                         quantity: 1,
-                        unit_price: 15000, // Ajusta el precio aquí
+                        unit_price: 100, // Ajusta el precio aquí
                         currency_id: 'ARS',
                     }
                 ],
