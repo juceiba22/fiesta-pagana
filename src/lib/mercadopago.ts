@@ -4,7 +4,7 @@ const client = new MercadoPagoConfig({
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN as string
 });
 
-export const requestPreference = async (name: string, email: string) => {
+export const requestPreference = async (name: string, email: string, ticketId: string) => {
 
     const preference = new Preference(client);
 
@@ -31,7 +31,7 @@ export const requestPreference = async (name: string, email: string) => {
                 },
                 auto_return: 'all',
                 notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhook`,
-                external_reference: email // Guardaremos el email para identificar la transacción en el webhook
+                external_reference: ticketId // Guardaremos el email para identificar la transacción en el webhook
             }
         });
 
