@@ -7,10 +7,33 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
+  const [statusText, setStatusText] = useState('COMPRAR ENTRADA');
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
   const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email) {
+      setErrorMsg("El email no puede estar vacío.");
+      return;
+    }
+    setErrorMsg('');
     setLoading(true);
+    setStatusText('VERIFICANDO...');
+
+    await new Promise(r => setTimeout(r, 600));
+
+    if (!validateEmail(email)) {
+      setErrorMsg("El formato del email es inválido.");
+      setLoading(false);
+      setStatusText('COMPRAR ENTRADA');
+      return;
+    }
+
+    setStatusText('PROCESANDO PAGO...');
 
     try {
       const response = await fetch('/api/checkout', {
@@ -22,18 +45,27 @@ export default function Home() {
       const data = await response.json();
       console.log("RESPONSE:", data);
 
+      if (!response.ok) {
+        setErrorMsg(data.error || "Hubo un error con tu solicitud.");
+        setLoading(false);
+        setStatusText('COMPRAR ENTRADA');
+        return;
+      }
+
       const { url } = data;
 
       if (url) {
         window.location.href = url; // Redirect a Mercado Pago
       } else {
-        alert("Hubo un error contactando a Mercado Pago.");
+        setErrorMsg("Hubo un error contactando a Mercado Pago.");
+        setLoading(false);
+        setStatusText('COMPRAR ENTRADA');
       }
     } catch (error) {
       console.error(error);
-      alert("Error procesando pago.");
-    } finally {
+      setErrorMsg("Error procesando pago.");
       setLoading(false);
+      setStatusText('COMPRAR ENTRADA');
     }
   };
 
@@ -66,12 +98,15 @@ export default function Home() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {errorMsg && (
+            <p className="text-red-500 text-sm font-medium animate-fade-in text-center">{errorMsg}</p>
+          )}
           <button
             type="submit"
             disabled={loading}
             className="w-full py-4 mt-4 bg-white text-black font-semibold tracking-wide text-lg rounded-xl hover:bg-neutral-200 transition-colors disabled:opacity-50"
           >
-            {loading ? 'PROCESANDO...' : 'COMPRAR ENTRADA'}
+            {statusText}
           </button>
         </form>
       </div>

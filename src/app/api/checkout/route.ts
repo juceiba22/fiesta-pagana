@@ -10,6 +10,16 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json({ error: 'Formato de email inválido' }, { status: 400 });
+    }
+
+    const domain = email.split('@')[1];
+    if (!domain || !domain.includes('.')) {
+      return NextResponse.json({ error: 'Dominio de email inválido' }, { status: 400 });
+    }
+
     // Si ya existe un pending para este email, reutilizarlo
     const { data: existing } = await supabaseServer
       .from('tickets')
