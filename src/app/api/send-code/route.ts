@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const token = crypto.createHmac('sha256', SECRET).update(email + code).digest('hex');
 
     // Send email via Resend
-    await resend.emails.send({
+    const resendResponse = await resend.emails.send({
       from: 'Fiesta Pagana <onboarding@resend.dev>',
       to: email,
       subject: '🔑 Tu código de acceso - Fiesta Pagana',
@@ -57,6 +57,11 @@ export async function POST(req: Request) {
         </div>
       `
     });
+
+    if (resendResponse.error) {
+      console.error("Resend API Error:", resendResponse.error);
+      return NextResponse.json({ error: 'Error enviando email: ' + resendResponse.error.message }, { status: 500 });
+    }
 
     return NextResponse.json({ token });
   } catch (err) {
