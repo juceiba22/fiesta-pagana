@@ -38,9 +38,9 @@ export async function POST(req: Request) {
           } else if (updatedTicket) {
             try {
               await resend.emails.send({
-                from: 'Fiesta Pagana <onboarding@resend.dev>',
+                from: 'Fiesta Pagana <bienvenido@fiestta-pagana.com>',
                 to: updatedTicket.email_comprador,
-                subject: '¡Bienvenido a la Fiesta Pagana! – Tu entrada está confirmada',
+                subject: '¡Bienvenido a la Fiesta Pagana! – Tu entrada está confirmada. En https://f-pagana.vercel.app/ ya podes empezar a vivir la experiencia pagana.',
                 html: `
                   <div style="background-color: #050505; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: center;">
                     <div style="max-width: 600px; margin: 0 auto; background-color: #111111; border: 1px solid #222222; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
