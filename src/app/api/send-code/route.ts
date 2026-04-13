@@ -31,7 +31,7 @@ export async function POST(req: Request) {
 
     // Send email via Resend
     const resendResponse = await resend.emails.send({
-      from: 'Fiesta Pagana <onboarding@resend.dev>',
+      from: 'Fiesta Pagana <bienvenido@fiestta-pagana.com>',
       to: email,
       subject: '🔑 Tu código de acceso - Fiesta Pagana',
       html: `
