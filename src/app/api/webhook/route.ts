@@ -46,7 +46,7 @@ export async function POST(req: Request) {
                     <div style="max-width: 600px; margin: 0 auto; background-color: #111111; border: 1px solid #222222; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                       <div style="padding: 40px 20px; border-bottom: 1px solid #222;">
                         <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 4px; margin: 0;">FIESTA PAGANA</h1>
-                        <p style="color: #888888; font-size: 14px; margin-top: 10px; letter-spacing: 2px;">15 NOVIEMBRE | SECRET LOCATION</p>
+                        <p style="color: #888888; font-size: 14px; margin-top: 10px; letter-spacing: 2px;">8 DE NOVIEMBRE | CLUB NAPOLES </p>
                       </div>
                       <div style="padding: 40px 30px;">
                         <h2 style="color: #dddddd; font-size: 22px; font-weight: 500; margin-bottom: 20px;">¡Hola ${updatedTicket.nombre_comprador}!</h2>
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
                           Tu pago ha sido procesado exitosamente y tu entrada está confirmada. Prepárate para sumergirte en una noche inolvidable. El ritual comienza pronto.
                         </p>
                         <div style="background-color: #000000; border: 1px solid #333333; padding: 25px; border-radius: 8px; margin: 0 auto;">
-                          <p style="color: #666666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">ID DE TU TICKET (SUPABASE)</p>
+                          <p style="color: #666666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">CODIGO DE ACCESO AL MUNDO PAGANO</p>
                           <p style="color: #ffffff; font-size: 18px; font-family: monospace; font-weight: bold; margin: 0; word-break: break-all;">
                             ${updatedTicket.id}
                           </p>

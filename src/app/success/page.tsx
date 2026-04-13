@@ -7,10 +7,10 @@
           ENTRADA CONFIRMADA!
         </h1>
         <p className="text-neutral-400 font-light text-lg">
-          Nos vemos el 8 de Julio en Club Napoles.
+          Nos vemos el 8 de Julio en Club Napoles. Te va a llegar un código al mail, con él ya podes acceder al mundo pagano.
         </p>
         <a href="/" className="inline-block mt-4 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 transition-colors">
-          Volver al inicio
+          Mundo Pagano
         </a>
       </div>
     </main>
