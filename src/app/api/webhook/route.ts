@@ -37,6 +37,9 @@ export async function POST(req: Request) {
             console.error('Error actualizando DB', error);
           } else if (updatedTicket) {
             try {
+              // Generamos el link con el email encodeado para evitar problemas con caracteres especiales
+              const magicLink = `https://f-pagana.vercel.app/?user=${encodeURIComponent(updatedTicket.email_comprador)}`;
+
               await resend.emails.send({
                 from: 'Fiesta Pagana <bienvenido@fiestta-pagana.com>',
                 to: updatedTicket.email_comprador,
@@ -53,8 +56,15 @@ export async function POST(req: Request) {
                         <p style="color: #aaaaaa; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
                           Tu pago ha sido procesado exitosamente y tu entrada está confirmada. Prepárate para sumergirte en una noche inolvidable. El ritual comienza pronto.
                         </p>
+                        
+                        <div style="margin-bottom: 35px;">
+                          <a href="${magicLink}" style="background-color: #ffffff; color: #000000; padding: 18px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; font-size: 14px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255,255,255,0.1);">
+                            INGRESAR AL MUNDO PAGANO
+                          </a>
+                        </div>
+
                         <div style="background-color: #000000; border: 1px solid #333333; padding: 25px; border-radius: 8px; margin: 0 auto;">
-                          <p style="color: #666666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">CODIGO DE ACCESO AL MUNDO PAGANO</p>
+                          <p style="color: #666666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 10px 0;">ID DE TU TICKET (SUPABASE)</p>
                           <p style="color: #ffffff; font-size: 18px; font-family: monospace; font-weight: bold; margin: 0; word-break: break-all;">
                             ${updatedTicket.id}
                           </p>
