@@ -7,7 +7,7 @@
           ENTRADA CONFIRMADA!
         </h1>
         <p className="text-neutral-400 font-light text-lg">
-          Te enviamos los detalles por email. Nos vemos el 15 de noviembre.
+          Nos vemos el 8 de Julio en Club Napoles.
         </p>
         <a href="/" className="inline-block mt-4 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 transition-colors">
           Volver al inicio

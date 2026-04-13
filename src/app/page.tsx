@@ -112,7 +112,7 @@ export default function Home() {
             FIESTA PAGANA
           </h1>
           <p className="text-neutral-400 text-lg sm:text-xl font-light tracking-wide">
-            15 NOVIEMBRE | SECRET LOCATION
+            8 DE JULIO | CLUB NAPOLES
           </p>
         </div>
 
@@ -148,7 +148,7 @@ export default function Home() {
         ) : (
           <form onSubmit={handleVerifyAndCheckout} className="space-y-4 pt-8 animate-fade-in">
             <h2 className="text-2xl font-bold mb-2">Valida tu Email</h2>
-            <p className="text-neutral-400 text-sm mb-6">Hemos enviado un código de 6 dígitos a <br/><span className="text-white font-medium">{email}</span></p>
+            <p className="text-neutral-400 text-sm mb-6">Hemos enviado un código de 6 dígitos a <br /><span className="text-white font-medium">{email}</span></p>
             <input
               type="text"
               required
