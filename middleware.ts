@@ -2,35 +2,42 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
-    // Solo protegemos la ruta /admin
-    if (request.nextUrl.pathname.startsWith('/admin')) {
+    const { pathname } = request.nextUrl;
+
+    // Forzamos la protección en /admin y cualquier sub-ruta
+    if (pathname.startsWith('/admin')) {
         const authHeader = request.headers.get('authorization');
 
-        // Si no hay cabecera de autenticación básica, pedimos login al navegador
         if (!authHeader) {
-            return new NextResponse('Autenticación requerida', {
+            return new NextResponse('Acceso restringido', {
                 status: 401,
                 headers: {
-                    'WWW-Authenticate': 'Basic realm="Acceso Admin Fiesta Pagana"',
+                    'WWW-Authenticate': 'Basic realm="Dashboard Login"',
                 },
             });
         }
 
-        const auth = authHeader.split(' ')[1];
-        const [user, password] = Buffer.from(auth, 'base64').toString().split(':');
+        try {
+            const auth = authHeader.split(' ')[1];
+            const decoded = Buffer.from(auth, 'base64').toString();
+            const [user, password] = decoded.split(':');
 
-        // Validamos contra las variables de entorno
-        const ADMIN_USER = 'admin'; // Tu usuario
-        const ADMIN_PASS = process.env.ADMIN_PASSWORD;
+            const ADMIN_USER = 'admin';
+            const ADMIN_PASS = process.env.ADMIN_PASSWORD;
 
-        if (user === ADMIN_USER && password === ADMIN_PASS) {
-            return NextResponse.next();
+            // Si la contraseña coincide, permitimos el paso
+            if (user === ADMIN_USER && password === ADMIN_PASS && ADMIN_PASS !== undefined) {
+                return NextResponse.next();
+            }
+        } catch (e) {
+            console.error('Error decodificando auth', e);
         }
 
-        return new NextResponse('Credenciales incorrectas', {
+        // Si llega aquí es porque falló la clave
+        return new NextResponse('Credenciales inválidas', {
             status: 401,
             headers: {
-                'WWW-Authenticate': 'Basic realm="Acceso Admin Fiesta Pagana"',
+                'WWW-Authenticate': 'Basic realm="Dashboard Login"',
             },
         });
     }
@@ -38,7 +45,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
 }
 
-// Configuramos para que solo actúe en /admin
+// El matcher debe ser preciso
 export const config = {
-    matcher: '/admin/:path*',
+    matcher: ['/admin', '/admin/:path*'],
 };
