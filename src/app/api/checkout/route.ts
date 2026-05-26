@@ -48,7 +48,7 @@ export async function POST(req: Request) {
         nombre_comprador: nombre,
         email_comprador: email,
         estado_pago: 'pending',
-        monto: 20000,
+        monto: 100,
       })
       .select('id')
       .single();
