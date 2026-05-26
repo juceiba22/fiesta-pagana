@@ -35,10 +35,13 @@ export async function POST(req: Request) {
       to: email,
       subject: '🔑 Tu código de acceso - Fiesta Pagana',
       html: `
+        <head>
+          <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+        </head>
         <div style="background-color: #050505; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: center;">
           <div style="max-width: 600px; margin: 0 auto; background-color: #111111; border: 1px solid #222222; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
             <div style="padding: 40px 20px; border-bottom: 1px solid #222;">
-              <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 4px; margin: 0;">FIESTA PAGANA</h1>
+              <h1 style="font-family: 'Cinzel Decorative', serif; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 4px; margin: 0;">FIESTA PAGANA</h1>
               <p style="color: #888888; font-size: 14px; margin-top: 10px; letter-spacing: 2px;">CÓDIGO DE VERIFICACIÓN</p>
             </div>
             <div style="padding: 40px 30px;">

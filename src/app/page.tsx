@@ -9,7 +9,7 @@ export default function Home() {
   const [nombre, setNombre] = useState('');
   const [otpCode, setOtpCode] = useState('');
   const [otpToken, setOtpToken] = useState('');
-  const [statusText, setStatusText] = useState('ADQUIRIR LLAVE DEL PORTAL');
+  const [statusText, setStatusText] = useState('COMPRAR');
   const [errorMsg, setErrorMsg] = useState('');
 
   const validateEmail = (email: string) => {
@@ -19,17 +19,17 @@ export default function Home() {
   const handleRequestCode = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !nombre) {
-      setErrorMsg("Debes nombrar tu presencia y destino.");
+      setErrorMsg("Debes ingresar tu nombre y mail.");
       return;
     }
     setErrorMsg('');
     setLoading(true);
-    setStatusText('INVOCANDO...');
+    setStatusText('PROCESANDO...');
 
     if (!validateEmail(email)) {
-      setErrorMsg("El rastro está difuso. Formato inválido.");
+      setErrorMsg("Formato de email inválido.");
       setLoading(false);
-      setStatusText('ADQUIRIR LLAVE DEL PORTAL');
+      setStatusText('COMPRAR');
       return;
     }
 
@@ -43,34 +43,34 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMsg(data.error || "No se ha podido invocar el acceso. Intenta de nuevo.");
+        setErrorMsg(data.error || "Hubo un error. Intenta de nuevo.");
         setLoading(false);
-        setStatusText('ADQUIRIR LLAVE DEL PORTAL');
+        setStatusText('COMPRAR');
         return;
       }
 
       const { token } = data;
       setOtpToken(token);
       setStep(2);
-      setStatusText('ATRAVESAR EL UMBRAL');
+      setStatusText('VERIFICAR CÓDIGO');
       setLoading(false);
     } catch (error) {
       console.error(error);
-      setErrorMsg("El eco se perdió en el vacío.");
+      setErrorMsg("Hubo un error de conexión.");
       setLoading(false);
-      setStatusText('ADQUIRIR LLAVE DEL PORTAL');
+      setStatusText('COMPRAR');
     }
   };
 
   const handleVerifyAndCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!otpCode || otpCode.length !== 6) {
-      setErrorMsg("El sello requiere 6 símbolos.");
+      setErrorMsg("El código requiere 6 dígitos.");
       return;
     }
     setErrorMsg('');
     setLoading(true);
-    setStatusText('TRASPASANDO...');
+    setStatusText('VERIFICANDO...');
 
     try {
       const response = await fetch('/api/checkout', {
@@ -82,24 +82,24 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMsg(data.error || "Sello rechazado. Las puertas siguen cerradas.");
+        setErrorMsg(data.error || "Código incorrecto.");
         setLoading(false);
-        setStatusText('ATRAVESAR EL UMBRAL');
+        setStatusText('VERIFICAR CÓDIGO');
         return;
       }
 
       if (data.url) {
         window.location.href = data.url;
       } else {
-        setErrorMsg("El camino se ha desvanecido.");
+        setErrorMsg("Error al generar el link de pago.");
         setLoading(false);
-        setStatusText('ATRAVESAR EL UMBRAL');
+        setStatusText('VERIFICAR CÓDIGO');
       }
     } catch (error) {
       console.error(error);
-      setErrorMsg("Un velo interrumpió el pasaje.");
+      setErrorMsg("Hubo un error inesperado.");
       setLoading(false);
-      setStatusText('ATRAVESAR EL UMBRAL');
+      setStatusText('VERIFICAR CÓDIGO');
     }
   };
 
@@ -127,7 +127,7 @@ export default function Home() {
         {/* Header Section - Mysterious */}
         <div className="text-center space-y-8 mb-12 animate-float-slow">
           <p className="text-neutral-500 text-xs md:text-sm tracking-[0.4em] font-light uppercase opacity-80">
-            Concepto • Obra • Ritual
+            Teatro • Música en Vivo • Fiesta
           </p>
 
           <div className="relative inline-block">
@@ -139,15 +139,14 @@ export default function Home() {
           </div>
 
           <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
-            <p className="text-neutral-400 font-cinzel-dec text-lg md:text-xl tracking-widest leading-relaxed">
-              Teatro+ Musica en Vivo + Fiesta
-            </p>
             <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-cinzel-dec text-lg md:text-xl tracking-[0.15em] uppercase text-center">
               <p>Ninio Ancestral & Los Barones del Conurbano</p>
               <p className="text-neutral-700 text-xs">❖</p>
               <p>Gugú Petite-Mort</p>
               <p className="text-neutral-700 text-xs">❖</p>
               <p>Materio Primo</p>
+              <p className="text-neutral-700 text-xs">❖</p>
+              <p>Fiesta</p>
             </div>
           </div>
 
@@ -174,13 +173,13 @@ export default function Home() {
           <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-neutral-600/40" />
 
           <p className="text-center text-neutral-400 text-xs sm:text-sm tracking-[0.15em] font-light mb-8 italic">
-            "VALOR DEL INGRESO: $20.000"
+            "ENTRADAS ANTICIPADAS: $20.000"
           </p>
 
           {step === 1 ? (
             <form onSubmit={handleRequestCode} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Identidad</label>
+                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Nombre y Apellido</label>
                 <input
                   type="text"
                   required
@@ -191,7 +190,7 @@ export default function Home() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Vínculo</label>
+                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Mail</label>
                 <input
                   type="email"
                   required
@@ -218,8 +217,8 @@ export default function Home() {
             </form>
           ) : (
             <form onSubmit={handleVerifyAndCheckout} className="space-y-6 animate-fade-in">
-              <h2 className="text-2xl font-cinzel-dec text-neutral-300 text-center mb-2 tracking-widest">EL SELLO</h2>
-              <p className="text-neutral-500 text-xs mb-8 text-center tracking-wider leading-relaxed">El sello de acceso ha sido revelado y enviado a <br /><span className="text-neutral-300 italic">{email}</span></p>
+              <h2 className="text-2xl font-cinzel-dec text-neutral-300 text-center mb-2 tracking-widest">CÓDIGO DE VERIFICACIÓN</h2>
+              <p className="text-neutral-500 text-xs mb-8 text-center tracking-wider leading-relaxed">Te enviamos un código de acceso a <br /><span className="text-neutral-300 italic">{email}</span></p>
 
               <div className="space-y-2">
                 <input
@@ -250,7 +249,7 @@ export default function Home() {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => { setStep(1); setErrorMsg(''); setStatusText('RECLAMAR MI LUGAR EN EL RITUAL'); }}
+                onClick={() => { setStep(1); setErrorMsg(''); setStatusText('COMPRAR'); }}
                 className="w-full pt-4 bg-transparent text-neutral-600 text-xs hover:text-neutral-300 transition-colors disabled:opacity-50 tracking-[0.2em] uppercase font-cinzel-dec"
               >
                 Volver al inicio
@@ -263,7 +262,7 @@ export default function Home() {
         <div className="mt-16 flex items-center justify-center gap-6 text-neutral-600 text-xs font-cinzel-dec tracking-[0.3em] uppercase">
           <span>+18 Años</span>
           <span className="text-neutral-800 text-[10px]">❖</span>
-          <span>ÚLTIMOS CUPOS DISPONIBLES</span>
+          <span>ENTRADAS LIMITADAS</span>
         </div>
       </div>
     </main>

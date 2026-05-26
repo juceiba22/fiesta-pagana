@@ -45,21 +45,24 @@ export async function POST(req: Request) {
                 to: updatedTicket.email_comprador,
                 subject: '¡Bienvenido a la Fiesta Pagana! – Tu entrada está confirmada.',
                 html: `
+                  <head>
+                    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+                  </head>
                   <div style="background-color: #050505; color: #ffffff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; padding: 40px 20px; text-align: center;">
                     <div style="max-width: 600px; margin: 0 auto; background-color: #111111; border: 1px solid #222222; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                       <div style="padding: 40px 20px; border-bottom: 1px solid #222;">
-                        <h1 style="color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 4px; margin: 0;">FIESTA PAGANA</h1>
+                        <h1 style="font-family: 'Cinzel Decorative', serif; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 4px; margin: 0;">FIESTA PAGANA</h1>
                         <p style="color: #888888; font-size: 14px; margin-top: 10px; letter-spacing: 2px;">8 DE JULIO | CLUB NAPOLES </p>
                       </div>
                       <div style="padding: 40px 30px;">
                         <h2 style="color: #dddddd; font-size: 22px; font-weight: 500; margin-bottom: 20px;">¡Hola ${updatedTicket.nombre_comprador}!</h2>
                         <p style="color: #aaaaaa; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
-                          Tu pago ha sido procesado exitosamente y tu entrada está confirmada. Prepárate para sumergirte en una noche inolvidable. El ritual comienza pronto.
+                          Tu pago ha sido procesado exitosamente y tu entrada está confirmada. Prepárate para sumergirte en una noche inolvidable. Nos vemos pronto.
                         </p>
                         
                         <div style="margin-bottom: 35px;">
                           <a href="${magicLink}" style="background-color: #ffffff; color: #000000; padding: 18px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; display: inline-block; font-size: 14px; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(255,255,255,0.1);">
-                            INGRESAR AL MUNDO PAGANO
+                            IR AL SITIO WEB
                           </a>
                         </div>
 
@@ -71,8 +74,8 @@ export async function POST(req: Request) {
                         </div>
                       </div>
                       <div style="background-color: #000000; padding: 20px; text-align: center;">
-                        <p style="color: #555555; font-size: 12px; margin: 0;"> Bienvenido al evento más misterioso de la Argentina.</p>
-                        <p style="color: #444444; font-size: 12px; margin-top: 10px;">&copy; ${new Date().getFullYear()} Fiesta Pagana</p>
+                        <p style="color: #555555; font-size: 12px; margin: 0;"> La mejor fiesta de Buenos Aires.</p>
+                        <p style="color: #444444; font-size: 12px; margin-top: 10px;">&copy; ${new Date().getFullYear()} <span style="font-family: 'Cinzel Decorative', serif;">Fiesta Pagana</span></p>
                       </div>
                     </div>
                   </div>
