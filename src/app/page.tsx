@@ -43,7 +43,7 @@ export default function Home() {
       const data = await response.json();
 
       if (!response.ok) {
-        setErrorMsg(data.error || "Las sombras ocultan la respuesta. Intenta de nuevo.");
+        setErrorMsg(data.error || "No se ha podido invocar el acceso. Intenta de nuevo.");
         setLoading(false);
         setStatusText('ADQUIRIR LLAVE DEL PORTAL');
         return;
@@ -119,7 +119,7 @@ export default function Home() {
         {/* Header Section - Mysterious */}
         <div className="text-center space-y-8 mb-12 animate-float-slow">
           <p className="text-neutral-500 text-xs md:text-sm tracking-[0.4em] font-light uppercase opacity-80">
-            Poesía • Música • Misterio
+            Concepto • Obra • Ritual
           </p>
 
           <div className="relative inline-block">
@@ -130,7 +130,20 @@ export default function Home() {
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-white/5 blur-[60px] rounded-full -z-10" />
           </div>
 
-          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16 mt-8">
+          <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
+            <p className="text-neutral-400 font-fell text-lg md:text-xl tracking-widest leading-relaxed">
+              El misterio de lo pagano se devela en el desarrollo de la obra de tres artistas:
+            </p>
+            <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-fell text-lg md:text-xl tracking-[0.15em] uppercase text-center">
+              <p>Ninio Ancestral & Los Barones del Conurbano</p>
+              <p className="text-neutral-700 text-xs">❖</p>
+              <p>Gugú Petite-Mort</p>
+              <p className="text-neutral-700 text-xs">❖</p>
+              <p>Materio Primo</p>
+            </div>
+          </div>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16 mt-12">
             <div className="text-center">
               <p className="text-neutral-400 font-fell text-xl md:text-2xl tracking-widest">MIÉRCOLES 8</p>
               <p className="text-neutral-600 font-fell text-lg tracking-[0.2em] uppercase mt-1">DE JULIO</p>
@@ -163,7 +176,7 @@ export default function Home() {
                 <input
                   type="text"
                   required
-                  placeholder="Tu nombre terrenal"
+                  placeholder="Tu nombre"
                   className="w-full px-4 py-3 bg-[#050505] text-neutral-300 rounded-none border-b border-neutral-800 focus:outline-none focus:border-neutral-500 focus:bg-[#080808] transition-all font-light placeholder:text-neutral-700 placeholder:font-fell placeholder:italic"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
@@ -198,7 +211,7 @@ export default function Home() {
           ) : (
             <form onSubmit={handleVerifyAndCheckout} className="space-y-6 animate-fade-in">
               <h2 className="text-2xl font-fell text-neutral-300 text-center mb-2 tracking-widest">EL SELLO</h2>
-              <p className="text-neutral-500 text-xs mb-8 text-center tracking-wider leading-relaxed">Las sombras han entregado un fragmento a <br /><span className="text-neutral-300 italic">{email}</span></p>
+              <p className="text-neutral-500 text-xs mb-8 text-center tracking-wider leading-relaxed">El sello de acceso ha sido revelado y enviado a <br /><span className="text-neutral-300 italic">{email}</span></p>
 
               <div className="space-y-2">
                 <input
@@ -232,7 +245,7 @@ export default function Home() {
                 onClick={() => { setStep(1); setErrorMsg(''); setStatusText('RECLAMAR MI LUGAR EN EL RITUAL'); }}
                 className="w-full pt-4 bg-transparent text-neutral-600 text-xs hover:text-neutral-300 transition-colors disabled:opacity-50 tracking-[0.2em] uppercase font-fell"
               >
-                Retirarse en las sombras
+                Volver al inicio
               </button>
             </form>
           )}
