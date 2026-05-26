@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { Inter, IM_Fell_English_SC } from "next/font/google";
+import { Cinzel, Cinzel_Decorative } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const fellEnglish = IM_Fell_English_SC({
+const cinzel = Cinzel({ subsets: ["latin"], variable: "--font-cinzel" });
+const cinzelDecorative = Cinzel_Decorative({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-fell",
+  variable: "--font-cinzel-dec",
 });
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${inter.variable} ${fellEnglish.variable}`}>
+    <html lang="es" className={`${cinzel.variable} ${cinzelDecorative.variable}`}>
       <body className="antialiased bg-black text-neutral-200">
         {children}
       </body>

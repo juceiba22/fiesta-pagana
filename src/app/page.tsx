@@ -105,9 +105,17 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen flex items-center justify-center bg-[#030303] overflow-hidden selection:bg-neutral-800 selection:text-neutral-300">
-      {/* Background Ambience - Fog and Shadows */}
-      <div className="absolute inset-0 bg-mystic-fog z-0 opacity-90" />
-      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/black-paper.png')] opacity-30 z-0 mix-blend-overlay pointer-events-none" />
+      {/* Background Ambience - Video and Fog */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover z-0 opacity-60"
+      >
+        <source src="/background.mp4" type="video/mp4" />
+      </video>
+      <div className="absolute inset-0 bg-mystic-fog z-0 opacity-70" />
 
       {/* Fog Elements */}
       <div className="absolute -top-1/4 -left-1/4 w-[150%] h-[150%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-neutral-800/10 via-transparent to-transparent blur-[100px] animate-fog z-0" style={{ animationDuration: '30s' }} />
@@ -123,7 +131,7 @@ export default function Home() {
           </p>
 
           <div className="relative inline-block">
-            <h1 className="font-fell text-7xl md:text-8xl lg:text-[10rem] text-[#d4d4d8] leading-none text-center drop-shadow-[0_0_20px_rgba(200,200,200,0.1)] tracking-tighter" style={{ textShadow: '2px 4px 15px rgba(0,0,0,0.8)' }}>
+            <h1 className="font-cinzel-dec text-7xl md:text-8xl lg:text-[10rem] text-[#d4d4d8] leading-none text-center drop-shadow-[0_0_20px_rgba(200,200,200,0.1)] tracking-tighter" style={{ textShadow: '2px 4px 15px rgba(0,0,0,0.8)' }}>
               FIESTA<br />PAGANA
             </h1>
             {/* Subtle ghostly glow */}
@@ -131,10 +139,10 @@ export default function Home() {
           </div>
 
           <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
-            <p className="text-neutral-400 font-fell text-lg md:text-xl tracking-widest leading-relaxed">
+            <p className="text-neutral-400 font-cinzel-dec text-lg md:text-xl tracking-widest leading-relaxed">
               El misterio de lo pagano se devela en el desarrollo de la obra de tres artistas:
             </p>
-            <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-fell text-lg md:text-xl tracking-[0.15em] uppercase text-center">
+            <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-cinzel-dec text-lg md:text-xl tracking-[0.15em] uppercase text-center">
               <p>Ninio Ancestral & Los Barones del Conurbano</p>
               <p className="text-neutral-700 text-xs">❖</p>
               <p>Gugú Petite-Mort</p>
@@ -145,13 +153,13 @@ export default function Home() {
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16 mt-12">
             <div className="text-center">
-              <p className="text-neutral-400 font-fell text-xl md:text-2xl tracking-widest">MIÉRCOLES 8</p>
-              <p className="text-neutral-600 font-fell text-lg tracking-[0.2em] uppercase mt-1">DE JULIO</p>
+              <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">MIÉRCOLES 8</p>
+              <p className="text-neutral-600 font-cinzel-dec text-lg tracking-[0.2em] uppercase mt-1">DE JULIO</p>
             </div>
             <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent opacity-50"></div>
             <div className="text-center">
-              <p className="text-neutral-400 font-fell text-xl md:text-2xl tracking-widest">21:00 hs</p>
-              <p className="text-neutral-600 font-fell text-sm md:text-base tracking-[0.2em] uppercase mt-1">ENTRADAS A LA VENTA</p>
+              <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">21:00 hs</p>
+              <p className="text-neutral-600 font-cinzel-dec text-sm md:text-base tracking-[0.2em] uppercase mt-1">ENTRADAS A LA VENTA</p>
             </div>
           </div>
         </div>
@@ -172,23 +180,23 @@ export default function Home() {
           {step === 1 ? (
             <form onSubmit={handleRequestCode} className="space-y-6">
               <div className="space-y-2">
-                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-fell">Identidad</label>
+                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Identidad</label>
                 <input
                   type="text"
                   required
                   placeholder="Tu nombre"
-                  className="w-full px-4 py-3 bg-[#050505] text-neutral-300 rounded-none border-b border-neutral-800 focus:outline-none focus:border-neutral-500 focus:bg-[#080808] transition-all font-light placeholder:text-neutral-700 placeholder:font-fell placeholder:italic"
+                  className="w-full px-4 py-3 bg-[#050505] text-neutral-300 rounded-none border-b border-neutral-800 focus:outline-none focus:border-neutral-500 focus:bg-[#080808] transition-all font-light placeholder:text-neutral-700 placeholder:font-cinzel-dec placeholder:italic"
                   value={nombre}
                   onChange={(e) => setNombre(e.target.value)}
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-fell">Vínculo</label>
+                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Vínculo</label>
                 <input
                   type="email"
                   required
                   placeholder="Tu correo de contacto"
-                  className="w-full px-4 py-3 bg-[#050505] text-neutral-300 rounded-none border-b border-neutral-800 focus:outline-none focus:border-neutral-500 focus:bg-[#080808] transition-all font-light placeholder:text-neutral-700 placeholder:font-fell placeholder:italic"
+                  className="w-full px-4 py-3 bg-[#050505] text-neutral-300 rounded-none border-b border-neutral-800 focus:outline-none focus:border-neutral-500 focus:bg-[#080808] transition-all font-light placeholder:text-neutral-700 placeholder:font-cinzel-dec placeholder:italic"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -203,14 +211,14 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-fell tracking-[0.3em] text-lg transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
+                className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-cinzel-dec tracking-[0.3em] text-lg transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
               >
                 {statusText}
               </button>
             </form>
           ) : (
             <form onSubmit={handleVerifyAndCheckout} className="space-y-6 animate-fade-in">
-              <h2 className="text-2xl font-fell text-neutral-300 text-center mb-2 tracking-widest">EL SELLO</h2>
+              <h2 className="text-2xl font-cinzel-dec text-neutral-300 text-center mb-2 tracking-widest">EL SELLO</h2>
               <p className="text-neutral-500 text-xs mb-8 text-center tracking-wider leading-relaxed">El sello de acceso ha sido revelado y enviado a <br /><span className="text-neutral-300 italic">{email}</span></p>
 
               <div className="space-y-2">
@@ -234,7 +242,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={loading || otpCode.length !== 6}
-                className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-fell tracking-[0.3em] text-lg transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
+                className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-cinzel-dec tracking-[0.3em] text-lg transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
               >
                 {statusText}
               </button>
@@ -243,7 +251,7 @@ export default function Home() {
                 type="button"
                 disabled={loading}
                 onClick={() => { setStep(1); setErrorMsg(''); setStatusText('RECLAMAR MI LUGAR EN EL RITUAL'); }}
-                className="w-full pt-4 bg-transparent text-neutral-600 text-xs hover:text-neutral-300 transition-colors disabled:opacity-50 tracking-[0.2em] uppercase font-fell"
+                className="w-full pt-4 bg-transparent text-neutral-600 text-xs hover:text-neutral-300 transition-colors disabled:opacity-50 tracking-[0.2em] uppercase font-cinzel-dec"
               >
                 Volver al inicio
               </button>
@@ -252,7 +260,7 @@ export default function Home() {
         </div>
 
         {/* Footer Details */}
-        <div className="mt-16 flex items-center justify-center gap-6 text-neutral-600 text-xs font-fell tracking-[0.3em] uppercase">
+        <div className="mt-16 flex items-center justify-center gap-6 text-neutral-600 text-xs font-cinzel-dec tracking-[0.3em] uppercase">
           <span>+18 Años</span>
           <span className="text-neutral-800 text-[10px]">❖</span>
           <span>ÚLTIMOS CUPOS DISPONIBLES</span>
