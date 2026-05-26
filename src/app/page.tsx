@@ -140,7 +140,7 @@ export default function Home() {
 
           <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
             <p className="text-neutral-400 font-cinzel-dec text-lg md:text-xl tracking-widest leading-relaxed">
-              El misterio de lo pagano se devela en el desarrollo de la obra de tres artistas:
+              Un espectáculo músico Teatral, que culimina con unas chacareras y folclores furioso. Luego, ¡un fiestón! 
             </p>
             <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-cinzel-dec text-lg md:text-xl tracking-[0.15em] uppercase text-center">
               <p>Ninio Ancestral & Los Barones del Conurbano</p>
