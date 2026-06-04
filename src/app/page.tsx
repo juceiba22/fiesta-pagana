@@ -11,6 +11,7 @@ export default function Home() {
   const [otpToken, setOtpToken] = useState('');
   const [statusText, setStatusText] = useState('COMPRAR');
   const [errorMsg, setErrorMsg] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -160,6 +161,26 @@ export default function Home() {
               <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">21:00 hs</p>
               <p className="text-neutral-600 font-cinzel-dec text-sm md:text-base tracking-[0.2em] uppercase mt-1">ENTRADAS A LA VENTA</p>
             </div>
+          </div>
+        </div>
+
+        {/* Transfer Box */}
+        <div className="w-full max-w-md mb-6 bg-[#0a0a0c]/80 backdrop-blur-xl border border-neutral-800/60 rounded-sm p-6 shadow-[0_5px_30px_rgba(0,0,0,0.8)] relative text-center">
+          <p className="text-neutral-400 font-cinzel-dec text-sm md:text-base tracking-[0.15em] uppercase mb-4">
+            Comprar entrada con transferencia
+          </p>
+          <div className="flex items-center justify-between bg-[#050505] border border-neutral-800 p-3 px-4">
+            <span className="text-neutral-200 font-mono tracking-wider text-sm md:text-base">fiesta.pagana</span>
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText('fiesta.pagana');
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              }}
+              className="text-xs text-neutral-500 hover:text-white transition-colors uppercase tracking-[0.1em]"
+            >
+              {copied ? 'Copiado' : 'Copiar'}
+            </button>
           </div>
         </div>
 
