@@ -177,7 +177,7 @@ export default function Home() {
                 setCopied(true);
                 setTimeout(() => setCopied(false), 2000);
                 setTimeout(() => {
-                  window.open('/confirmacion', '_blank');
+                  window.location.href = '/confirmacion';
                 }, 10000);
               }}
               className="text-xs text-neutral-500 hover:text-white transition-colors uppercase tracking-[0.1em]"
