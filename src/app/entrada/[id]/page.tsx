@@ -49,11 +49,8 @@ export default async function EntradaPage({ params }: { params: Promise<{ id: st
             <QRCodeSVG value={id} size={200} />
           </div>
 
-          <p className="text-neutral-500 font-mono tracking-widest text-xs uppercase mb-2">
-            Entrada a nombre de:
-          </p>
-          <p className="text-neutral-300 font-cinzel-dec text-lg tracking-widest">
-            {entrada.nombre}
+          <p className="text-neutral-300 font-cinzel-dec text-sm md:text-base tracking-widest uppercase mb-2 leading-relaxed">
+            8 de Julio, 22 hs<br/>Club Social Napoles, Rocha 915
           </p>
           
           {entrada.ingreso_registrado && (
