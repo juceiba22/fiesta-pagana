@@ -141,7 +141,7 @@ export default function Home() {
 
           <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
             <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-cinzel-dec text-lg md:text-xl tracking-[0.15em] uppercase text-center">
-              <p>Teatro Foro: ¡¡Argentina viene de Argentum!!</p>
+              <p>Teatro Foro </p>
               <p className="text-neutral-700 text-xs">❖</p>
               <p>Ninio Ancestral & Los Barones del Conurbano</p>
               <p className="text-neutral-700 text-xs">❖</p>
@@ -197,7 +197,7 @@ export default function Home() {
           <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-neutral-600/40" />
 
           <p className="text-center text-neutral-400 text-xs sm:text-sm tracking-[0.15em] font-light mb-8 italic">
-            "ENTRADAS ANTICIPADAS: $20.000"
+            "Valor de la Entrada: $20.000"
           </p>
 
           {step === 1 ? (
