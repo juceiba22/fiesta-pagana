@@ -141,7 +141,7 @@ export default function Home() {
 
           <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
             <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-cinzel-dec text-lg md:text-xl tracking-[0.15em] uppercase text-center">
-              <p>Teatro Foro: ¡Argentina viene de Argentum!</p>
+              <p>Teatro Foro: ¡¡Argentina viene de Argentum!!</p>
               <p className="text-neutral-700 text-xs">❖</p>
               <p>Ninio Ancestral & Los Barones del Conurbano</p>
               <p className="text-neutral-700 text-xs">❖</p>
