@@ -197,7 +197,7 @@ export default function Home() {
           <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-neutral-600/40" />
 
           <p className="text-center text-neutral-400 text-xs sm:text-sm tracking-[0.15em] font-light mb-8 italic">
-            "Valor de la Entrada: $20.000"
+            "VALOR DE LA ENTRADA: $10.000 (TRANSFERENCIA) / $12.000 (MERCADO PAGO)"
           </p>
 
           {step === 1 ? (
