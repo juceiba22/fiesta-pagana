@@ -68,6 +68,30 @@ export async function aprobarVale2x1(formData: FormData) {
   revalidatePath('/admin');
 }
 
+// Vuelve a mandar el mail con el vale a una transferencia ya validada (p. ej. si no llegó).
+export async function reenviarVale2x1(formData: FormData) {
+  await exigirAdmin();
+
+  const id = String(formData.get('id') ?? '');
+
+  const { data: vale } = await supabaseServer
+    .from('entradas_2x1')
+    .select('*')
+    .eq('id', id)
+    .eq('estado_pago', 'approved')
+    .maybeSingle();
+
+  if (vale) {
+    try {
+      await enviarVale2x1(vale as Entrada2x1);
+    } catch (emailError) {
+      console.error('Error reenviando email del vale 2x1:', emailError);
+    }
+  }
+
+  revalidatePath('/admin');
+}
+
 // No se encontró la transferencia: se elimina el vale pendiente y se devuelve el uso del código.
 export async function rechazarVale2x1(formData: FormData) {
   await exigirAdmin();

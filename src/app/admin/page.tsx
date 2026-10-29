@@ -1,6 +1,6 @@
 import { supabaseServer } from '@/lib/supabase';
 import type { Codigo2x1, Entrada2x1 } from '@/lib/promo2x1';
-import { crearCodigo2x1, alternarCodigo2x1, aprobarVale2x1, rechazarVale2x1 } from './actions';
+import { crearCodigo2x1, alternarCodigo2x1, aprobarVale2x1, rechazarVale2x1, reenviarVale2x1 } from './actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -154,15 +154,14 @@ export default async function AdminDashboard() {
                     <th className="p-4">Código</th>
                     <th className="p-4">Método</th>
                     <th className="p-4">Estado</th>
+                    <th className="p-4">Acción</th>
                     <th className="p-4">Ingresaron</th>
-                    <th className="p-4">Comprobante</th>
-                    <th className="p-4">Verificar transferencia</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
                   {!vales.length && (
                     <tr>
-                      <td colSpan={9} className="p-10 text-center text-neutral-500 italic">
+                      <td colSpan={8} className="p-10 text-center text-neutral-500 italic">
                         No hay vales 2x1 emitidos.
                       </td>
                     </tr>
@@ -186,15 +185,13 @@ export default async function AdminDashboard() {
                           {v.estado_pago.toUpperCase()}
                         </span>
                       </td>
-                      <td className="p-4 text-neutral-300">{v.ingresos} / {v.cantidad}</td>
-                      <td className="p-4 text-neutral-400 text-xs">{v.comprobante || '---'}</td>
                       <td className="p-4">
                         {v.metodo === 'transferencia' && v.estado_pago === 'pending' && (
-                          <div className="flex gap-3">
+                          <div className="flex gap-2">
                             <form action={aprobarVale2x1}>
                               <input type="hidden" name="id" value={v.id} />
-                              <button type="submit" className="px-3 py-1 text-xs font-semibold bg-green-600 hover:bg-green-500 text-white rounded">
-                                Aprobar
+                              <button type="submit" className="px-3 py-1 text-xs font-semibold bg-green-600 hover:bg-green-500 text-white rounded whitespace-nowrap">
+                                Validar transferencia
                               </button>
                             </form>
                             <form action={rechazarVale2x1}>
@@ -205,7 +202,16 @@ export default async function AdminDashboard() {
                             </form>
                           </div>
                         )}
+                        {v.metodo === 'transferencia' && v.estado_pago === 'approved' && (
+                          <form action={reenviarVale2x1}>
+                            <input type="hidden" name="id" value={v.id} />
+                            <button type="submit" className="px-3 py-1 text-xs font-semibold bg-neutral-800 hover:bg-neutral-700 text-neutral-300 rounded whitespace-nowrap">
+                              Reenviar mail
+                            </button>
+                          </form>
+                        )}
                       </td>
+                      <td className="p-4 text-neutral-300">{v.ingresos} / {v.cantidad}</td>
                     </tr>
                   ))}
                 </tbody>

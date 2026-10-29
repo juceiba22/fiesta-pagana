@@ -11,7 +11,6 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
   const [codigo, setCodigo] = useState('');
-  const [comprobante, setComprobante] = useState('');
   const [codigoValido, setCodigoValido] = useState<boolean | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [copied, setCopied] = useState(false);
@@ -87,11 +86,7 @@ export default function Home() {
   // "Ya transferí": con un código 2x1 válido se emite al instante el vale por 2
   const handleTransferido = async () => {
     if (!datosDelVale()) return;
-    if (comprobante.trim().length < 3) {
-      setErrorMsg("Ingresá el número de operación o el titular de la transferencia.");
-      return;
-    }
-    const data = await llamarApi('/api/redeem-2x1', { nombre, email, codigo, comprobante });
+    const data = await llamarApi('/api/redeem-2x1', { nombre, email, codigo });
     if (data?.id) window.location.href = `/entrada/${data.id}`;
     else if (data) { setErrorMsg("No pudimos generar tu vale."); setLoading(false); }
   };
@@ -167,7 +162,7 @@ export default function Home() {
             {tieneCodigo && (
               <div className="space-y-4 animate-fade-in">
                 <div className="space-y-2">
-                  <label className={labelClass}>Nombre y Apellido</label>
+                  <label className={labelClass}>Tu nombre (como figura en la transferencia)</label>
                   <input type="text" placeholder="Tu nombre" className={inputClass} value={nombre} onChange={(e) => setNombre(e.target.value)} />
                 </div>
                 <div className="space-y-2">
@@ -203,16 +198,6 @@ export default function Home() {
 
             {tieneCodigo ? (
               <>
-                <div className="space-y-2 text-left">
-                  <label className={labelClass}>Nº de operación o titular</label>
-                  <input
-                    type="text"
-                    placeholder="Para encontrar tu transferencia"
-                    className={inputClass}
-                    value={comprobante}
-                    onChange={(e) => setComprobante(e.target.value)}
-                  />
-                </div>
                 <button type="button" disabled={loading} onClick={handleTransferido} className={buttonClass}>
                   YA TRANSFERÍ
                 </button>

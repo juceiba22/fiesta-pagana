@@ -11,19 +11,11 @@ import {
 // Queda habilitado (y se envía el mail) recién cuando el admin verifica la transferencia.
 export async function POST(req: Request) {
   try {
-    const { nombre, email, codigo, comprobante } = await req.json();
+    const { nombre, email, codigo } = await req.json();
     const codigoNormalizado = normalizarCodigo(codigo);
-    const referencia = typeof comprobante === 'string' ? comprobante.trim().slice(0, 120) : '';
 
     if (!nombre || !email || !codigoNormalizado) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
-    }
-
-    if (referencia.length < 3) {
-      return NextResponse.json(
-        { error: 'Ingresá el número de operación o el titular de la transferencia' },
-        { status: 400 }
-      );
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -45,7 +37,6 @@ export async function POST(req: Request) {
       nombre,
       email,
       metodo: 'transferencia',
-      comprobante: referencia,
     });
 
     if (!entrada) {
