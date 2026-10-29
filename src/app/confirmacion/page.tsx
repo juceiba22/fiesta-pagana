@@ -33,6 +33,12 @@ export default function Confirmacion() {
           <p className="text-neutral-400 text-sm md:text-base font-light tracking-[0.1em] leading-loose">
             ¡Compartile el comprobante a alguien del staff de la Fiesta Pagana y te anotamos en la lista!
           </p>
+          <p className="text-neutral-500 text-xs md:text-sm font-light tracking-[0.1em] leading-loose mt-8">
+            ¿Tenés un código 2x1?{' '}
+            <a href="/" className="text-neutral-300 underline hover:text-white transition-colors">
+              Ingresalo acá para obtener tu vale por 2
+            </a>
+          </p>
         </div>
       </div>
     </main>

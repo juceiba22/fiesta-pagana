@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { supabaseServer } from '@/lib/supabase';
 import { Resend } from 'resend';
+import { PREFIJO_REFERENCIA_2X1, type Entrada2x1 } from '@/lib/promo2x1';
+import { enviarVale2x1 } from '@/lib/email2x1';
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN as string
@@ -21,7 +23,30 @@ export async function POST(req: Request) {
       if (paymentInfo.status === 'approved') {
         const ticketId = paymentInfo.external_reference;
 
-        if (ticketId) {
+        if (ticketId?.startsWith(PREFIJO_REFERENCIA_2X1)) {
+          // Vale 2x1 pagado con Mercado Pago
+          const { data: entrada, error } = await supabaseServer
+            .from('entradas_2x1')
+            .update({
+              estado_pago: 'approved',
+              mercadopago_payment_id: String(dataID),
+            })
+            .eq('id', ticketId.slice(PREFIJO_REFERENCIA_2X1.length))
+            .eq('estado_pago', 'pending')
+            .select()
+            .single();
+
+          if (error) {
+            // PGRST116: no había fila pendiente (notificación repetida), no es un error real
+            if (error.code !== 'PGRST116') console.error('Error actualizando DB (2x1)', error);
+          } else if (entrada) {
+            try {
+              await enviarVale2x1(entrada as Entrada2x1);
+            } catch (emailError) {
+              console.error('Error enviando email del vale 2x1:', emailError);
+            }
+          }
+        } else if (ticketId) {
           const { data: updatedTicket, error } = await supabaseServer
             .from('tickets')
             .update({

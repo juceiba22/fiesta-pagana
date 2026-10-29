@@ -50,7 +50,8 @@ export default function ScannerPage() {
           
           if (res.ok) {
             setStatusType('success');
-            setStatusText(`ACCESO PERMITIDO - ${data.ticket.nombre}`);
+            const vale = data.ticket.cantidad ? ` (${data.ticket.ingresos}/${data.ticket.cantidad})` : '';
+            setStatusText(`ACCESO PERMITIDO - ${data.ticket.nombre}${vale}`);
           } else {
             setStatusType('error');
             setStatusText(`DENEGADO - ${data.error}`);

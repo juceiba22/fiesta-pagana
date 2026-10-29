@@ -1,13 +1,20 @@
 import { NextResponse } from 'next/server';
-import { requestPreference } from '@/lib/mercadopago';
+import { requestPreference, requestPreference2x1 } from '@/lib/mercadopago';
 import { supabaseServer } from '@/lib/supabase';
+import {
+  buscarEntradaExistente,
+  consumirUso,
+  crearEntrada,
+  liberarUso,
+  normalizarCodigo,
+} from '@/lib/promo2x1';
 import crypto from 'crypto';
 
 const SECRET = process.env.OTP_SECRET || 'secret-pagana-2026';
 
 export async function POST(req: Request) {
   try {
-    const { nombre, email, token, code } = await req.json();
+    const { nombre, email, token, code, codigo } = await req.json();
 
     if (!nombre || !email || !token || !code) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
@@ -26,6 +33,31 @@ export async function POST(req: Request) {
     const expectedHash = crypto.createHmac('sha256', SECRET).update(email + code).digest('hex');
     if (token !== expectedHash) {
       return NextResponse.json({ error: 'Código de verificación incorrecto' }, { status: 400 });
+    }
+
+    // Con código 2x1: vale por 2 entradas a $10.000 + $1.000 de recargo de Mercado Pago
+    const codigo2x1 = normalizarCodigo(codigo);
+    if (codigo2x1) {
+      let entrada = await buscarEntradaExistente(codigo2x1, email);
+
+      if (entrada && entrada.estado_pago === 'approved') {
+        return NextResponse.json({ url: `${process.env.NEXT_PUBLIC_SITE_URL}/entrada/${entrada.id}` });
+      }
+
+      // Si quedó un pago pendiente de este mail se reutiliza (el uso del código ya está tomado).
+      if (!entrada) {
+        if (!(await consumirUso(codigo2x1))) {
+          return NextResponse.json({ error: 'Código 2x1 inválido o ya utilizado' }, { status: 400 });
+        }
+        entrada = await crearEntrada({ codigo: codigo2x1, nombre, email, metodo: 'mercadopago' });
+        if (!entrada) {
+          await liberarUso(codigo2x1);
+          return NextResponse.json({ error: 'Error guardando en BD' }, { status: 500 });
+        }
+      }
+
+      const url = await requestPreference2x1(nombre, email, entrada.id);
+      return NextResponse.json({ url });
     }
 
     // Si ya existe un pending para este email, reutilizarlo

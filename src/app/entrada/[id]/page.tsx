@@ -1,6 +1,8 @@
 import { supabaseServer } from '@/lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
 
+export const dynamic = 'force-dynamic';
+
 export default async function EntradaPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = await params;
   const id = resolvedParams.id;
@@ -9,9 +11,25 @@ export default async function EntradaPage({ params }: { params: Promise<{ id: st
     .from('entradas_fisicas')
     .select('*')
     .eq('id', id)
-    .single();
+    .maybeSingle();
 
-  if (!entrada) {
+  // Vale 2x1 (válido por 2 personas): solo si no es una entrada física
+  const vale = !entrada && /^[0-9a-f-]{36}$/i.test(id)
+    ? (await supabaseServer.from('entradas_2x1').select('*').eq('id', id).maybeSingle()).data
+    : null;
+
+  if (vale && vale.estado_pago !== 'approved') {
+    return (
+      <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#030303] px-6 text-center">
+        <h1 className="text-neutral-300 text-2xl font-cinzel-dec tracking-widest mb-4">Pago pendiente</h1>
+        <p className="text-neutral-500 tracking-widest text-sm">
+          Estamos esperando la confirmación de Mercado Pago. Recargá esta página en unos instantes.
+        </p>
+      </main>
+    );
+  }
+
+  if (!entrada && !vale) {
     return (
       <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#030303]">
         <h1 className="text-neutral-300 text-2xl font-cinzel-dec tracking-widest mb-4">Entrada no válida</h1>
@@ -53,9 +71,22 @@ export default async function EntradaPage({ params }: { params: Promise<{ id: st
             8 de Julio, 22 hs<br/>Club Social Napoles, Rocha 915
           </p>
           
-          {entrada.ingreso_registrado && (
+          {vale && (
+            <p className="text-neutral-200 font-cinzel-dec text-lg tracking-widest uppercase mt-4">
+              Vale por {vale.cantidad}<br />
+              <span className="text-neutral-500 text-xs">Ingresaron {vale.ingresos} de {vale.cantidad}</span>
+            </p>
+          )}
+
+          {entrada?.ingreso_registrado && (
             <div className="mt-8 p-3 bg-red-950/50 border border-red-900/50 text-red-400 text-xs tracking-widest uppercase font-cinzel-dec rounded">
               Esta entrada ya ingresó
+            </div>
+          )}
+
+          {vale && vale.ingresos >= vale.cantidad && (
+            <div className="mt-8 p-3 bg-red-950/50 border border-red-900/50 text-red-400 text-xs tracking-widest uppercase font-cinzel-dec rounded">
+              Este vale ya fue utilizado
             </div>
           )}
         </div>

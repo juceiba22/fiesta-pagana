@@ -12,9 +12,52 @@ export default function Home() {
   const [statusText, setStatusText] = useState('COMPRAR');
   const [errorMsg, setErrorMsg] = useState('');
   const [copied, setCopied] = useState(false);
+  const [codigo2x1, setCodigo2x1] = useState('');
+
+  const tieneCodigo = codigo2x1.trim().length > 0;
+  const textoComprar = tieneCodigo ? 'PAGAR CON MERCADO PAGO' : 'COMPRAR';
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  // "Ya transferí": con un código 2x1 válido se emite el vale por 2 en el momento.
+  const handleTransferido = async () => {
+    if (!email || !nombre) {
+      setErrorMsg("Debes ingresar tu nombre y mail.");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setErrorMsg("Formato de email inválido.");
+      return;
+    }
+    setErrorMsg('');
+    setLoading(true);
+    setStatusText('GENERANDO TU VALE...');
+
+    try {
+      const response = await fetch('/api/redeem-2x1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nombre, email, codigo: codigo2x1 })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.id) {
+        setErrorMsg(data.error || "Hubo un error. Intenta de nuevo.");
+        setLoading(false);
+        setStatusText(textoComprar);
+        return;
+      }
+
+      window.location.href = `/entrada/${data.id}`;
+    } catch (error) {
+      console.error(error);
+      setErrorMsg("Hubo un error de conexión.");
+      setLoading(false);
+      setStatusText(textoComprar);
+    }
   };
 
   const handleRequestCode = async (e: React.FormEvent) => {
@@ -30,11 +73,26 @@ export default function Home() {
     if (!validateEmail(email)) {
       setErrorMsg("Formato de email inválido.");
       setLoading(false);
-      setStatusText('COMPRAR');
+      setStatusText(textoComprar);
       return;
     }
 
     try {
+      if (tieneCodigo) {
+        const validacion = await fetch('/api/validate-2x1', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ codigo: codigo2x1 })
+        });
+        if (!validacion.ok) {
+          const { error } = await validacion.json();
+          setErrorMsg(error || "Código 2x1 inválido.");
+          setLoading(false);
+          setStatusText(textoComprar);
+          return;
+        }
+      }
+
       const response = await fetch('/api/send-code', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -46,7 +104,7 @@ export default function Home() {
       if (!response.ok) {
         setErrorMsg(data.error || "Hubo un error. Intenta de nuevo.");
         setLoading(false);
-        setStatusText('COMPRAR');
+        setStatusText(textoComprar);
         return;
       }
 
@@ -59,7 +117,7 @@ export default function Home() {
       console.error(error);
       setErrorMsg("Hubo un error de conexión.");
       setLoading(false);
-      setStatusText('COMPRAR');
+      setStatusText(textoComprar);
     }
   };
 
@@ -77,7 +135,7 @@ export default function Home() {
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nombre, email, token: otpToken, code: otpCode })
+        body: JSON.stringify({ nombre, email, token: otpToken, code: otpCode, codigo: codigo2x1 })
       });
 
       const data = await response.json();
@@ -198,6 +256,8 @@ export default function Home() {
 
           <p className="text-center text-neutral-400 text-xs sm:text-sm tracking-[0.15em] font-light mb-8 italic">
             "VALOR DE LA ENTRADA: $10.000 (TRANSFERENCIA) / $12.000 (TARJETA DE CRÉDITO)"
+            <br />
+            <span className="not-italic text-neutral-500">¿Tenés un código 2x1? 2 entradas por $10.000</span>
           </p>
 
           {step === 1 ? (
@@ -225,18 +285,45 @@ export default function Home() {
                 />
               </div>
 
+              <div className="space-y-2">
+                <label className="text-neutral-500 text-xs uppercase tracking-[0.2em] pl-1 font-cinzel-dec">Código 2x1 (opcional)</label>
+                <input
+                  type="text"
+                  placeholder="Tu código"
+                  className="w-full px-4 py-3 bg-[#050505] text-neutral-300 rounded-none border-b border-neutral-800 focus:outline-none focus:border-neutral-500 focus:bg-[#080808] transition-all font-mono uppercase tracking-widest placeholder:text-neutral-700 placeholder:font-cinzel-dec placeholder:italic placeholder:normal-case"
+                  value={codigo2x1}
+                  onChange={(e) => setCodigo2x1(e.target.value)}
+                />
+                {tieneCodigo && (
+                  <p className="text-neutral-500 text-[11px] tracking-wider leading-relaxed pl-1">
+                    Con el código 2x1 pagás $10.000 por 2 entradas. Por Mercado Pago son $11.000 ($1.000 de recargo por comisión).
+                  </p>
+                )}
+              </div>
+
               <div className="h-6 flex items-center justify-center">
                 {errorMsg && (
                   <p className="text-[#8a2be2] text-xs font-medium animate-fade-in tracking-wider">{errorMsg}</p>
                 )}
               </div>
 
+              {tieneCodigo && (
+                <button
+                  type="button"
+                  disabled={loading}
+                  onClick={handleTransferido}
+                  className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-cinzel-dec tracking-[0.2em] text-base transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
+                >
+                  YA TRANSFERÍ ($10.000)
+                </button>
+              )}
+
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-cinzel-dec tracking-[0.3em] text-lg transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
+                className="w-full py-4 mt-2 bg-transparent hover:bg-[#111] text-neutral-300 font-cinzel-dec tracking-[0.2em] text-base transition-all disabled:opacity-50 border border-neutral-700/50 hover:border-neutral-400/80 hover:text-white shadow-[inset_0_0_20px_rgba(0,0,0,0.5)]"
               >
-                {statusText}
+                {loading ? statusText : tieneCodigo ? 'MERCADO PAGO ($11.000)' : 'COMPRAR'}
               </button>
             </form>
           ) : (
@@ -273,7 +360,7 @@ export default function Home() {
               <button
                 type="button"
                 disabled={loading}
-                onClick={() => { setStep(1); setErrorMsg(''); setStatusText('COMPRAR'); }}
+                onClick={() => { setStep(1); setErrorMsg(''); setStatusText(textoComprar); }}
                 className="w-full pt-4 bg-transparent text-neutral-600 text-xs hover:text-neutral-300 transition-colors disabled:opacity-50 tracking-[0.2em] uppercase font-cinzel-dec"
               >
                 Volver al inicio
