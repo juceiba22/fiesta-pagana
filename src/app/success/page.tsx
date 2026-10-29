@@ -7,7 +7,7 @@ export default function SuccessPage() {
           ENTRADA CONFIRMADA!
         </h1>
         <p className="text-neutral-400 font-light text-lg">
-          Nos vemos el 8 de Julio en Club Napoles. Ya podes acceder al mundo pagano.
+          Nos vemos el 6 de Noviembre en El Portal Teatro. Ya podes acceder al mundo pagano.
         </p>
         <a href="https://fiestta-pagana.com/" className="inline-block mt-4 px-6 py-3 bg-white text-black font-semibold rounded-xl hover:bg-neutral-200 transition-colors">
           Mundo Pagano

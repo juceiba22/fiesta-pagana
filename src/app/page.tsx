@@ -186,7 +186,7 @@ export default function Home() {
         {/* Header Section - Mysterious */}
         <div className="text-center space-y-8 mb-12 animate-float-slow">
           <p className="text-neutral-500 text-xs md:text-sm tracking-[0.4em] font-light uppercase opacity-80">
-            Teatro • Música en Vivo • Fiesta
+            Teatro • Folclore • Cachengue
           </p>
 
           <div className="relative inline-block">
@@ -199,25 +199,23 @@ export default function Home() {
 
           <div className="max-w-2xl mx-auto mt-10 text-center space-y-5">
             <div className="flex flex-col items-center gap-3 mt-4 text-neutral-300 font-cinzel-dec text-lg md:text-xl tracking-[0.15em] uppercase text-center">
-              <p>Teatro Foro </p>
+              <p>Vuelve la Fiesta Pagana</p>
               <p className="text-neutral-700 text-xs">❖</p>
-              <p>Ninio Ancestral & Los Barones del Conurbano</p>
+              <p>Esta vez con</p>
               <p className="text-neutral-700 text-xs">❖</p>
-              <p>Cierre Folclorico</p>
-              <p className="text-neutral-700 text-xs">❖</p>
-              <p>¡Fiesta! DJ Ulises</p>
+              <p>Teatro + Folclore + Cachengue</p>
             </div>
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-16 mt-12">
             <div className="text-center">
-              <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">MIÉRCOLES 8</p>
-              <p className="text-neutral-600 font-cinzel-dec text-lg tracking-[0.2em] uppercase mt-1">DE JULIO</p>
+              <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">VIERNES 6</p>
+              <p className="text-neutral-600 font-cinzel-dec text-lg tracking-[0.2em] uppercase mt-1">DE NOVIEMBRE</p>
             </div>
             <div className="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-neutral-700 to-transparent opacity-50"></div>
             <div className="text-center">
-              <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">21:00 hs</p>
-              <p className="text-neutral-600 font-cinzel-dec text-sm md:text-base tracking-[0.2em] uppercase mt-1">ENTRADAS A LA VENTA</p>
+              <p className="text-neutral-400 font-cinzel-dec text-xl md:text-2xl tracking-widest">EL PORTAL TEATRO</p>
+              <p className="text-neutral-600 font-cinzel-dec text-sm md:text-base tracking-[0.2em] uppercase mt-1">LAVALLE 3073</p>
             </div>
           </div>
         </div>

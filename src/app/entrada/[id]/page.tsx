@@ -68,7 +68,7 @@ export default async function EntradaPage({ params }: { params: Promise<{ id: st
           </div>
 
           <p className="text-neutral-300 font-cinzel-dec text-sm md:text-base tracking-widest uppercase mb-2 leading-relaxed">
-            8 de Julio, 22 hs<br/>Club Social Napoles, Rocha 915
+            6 de Noviembre<br/>El Portal Teatro, Lavalle 3073
           </p>
           
           {vale && (

@@ -19,7 +19,7 @@ export async function enviarVale2x1(entrada: Entrada2x1) {
         <div style="max-width: 600px; margin: 0 auto; background-color: #111111; border: 1px solid #222222; border-radius: 12px; overflow: hidden;">
           <div style="padding: 40px 20px; border-bottom: 1px solid #222;">
             <h1 style="font-family: 'Cinzel Decorative', serif; color: #ffffff; font-size: 32px; font-weight: 800; letter-spacing: 4px; margin: 0;">FIESTA PAGANA</h1>
-            <p style="color: #888888; font-size: 14px; margin-top: 10px; letter-spacing: 2px;">8 DE JULIO | CLUB NAPOLES</p>
+            <p style="color: #888888; font-size: 14px; margin-top: 10px; letter-spacing: 2px;">6 DE NOVIEMBRE | EL PORTAL TEATRO</p>
           </div>
           <div style="padding: 40px 30px;">
             <h2 style="color: #dddddd; font-size: 22px; font-weight: 500; margin-bottom: 20px;">¡Hola ${nombre}!</h2>
