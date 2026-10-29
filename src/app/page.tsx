@@ -54,11 +54,15 @@ export default function Home() {
   const llamarApi = async (ruta: string, body?: object) => {
     setErrorMsg('');
     setLoading(true);
+    // Si el servidor no responde, se corta a los 20 s para no dejar el botón en "PROCESANDO..." para siempre
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 20000);
     try {
       const response = await fetch(ruta, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body ?? {})
+        body: JSON.stringify(body ?? {}),
+        signal: controller.signal
       });
       const data = await response.json();
       if (!response.ok) {
@@ -69,9 +73,13 @@ export default function Home() {
       return data;
     } catch (error) {
       console.error(error);
-      setErrorMsg("Hubo un error de conexión.");
+      setErrorMsg(controller.signal.aborted
+        ? "El servidor tardó demasiado en responder. Intentá de nuevo."
+        : "Hubo un error de conexión.");
       setLoading(false);
       return null;
+    } finally {
+      clearTimeout(timeout);
     }
   };
 

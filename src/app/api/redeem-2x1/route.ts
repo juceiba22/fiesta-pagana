@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import {
   buscarEntradaExistente,
   consumirUso,
@@ -44,12 +44,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Error guardando en BD' }, { status: 500 });
     }
 
-    try {
-      await enviarVale2x1(entrada);
-    } catch (emailError) {
-      // El vale ya está emitido y se muestra en pantalla; el mail es un respaldo.
-      console.error('Error enviando email del vale 2x1:', emailError);
-    }
+    // El vale ya está emitido y se muestra en pantalla: el mail es un respaldo y se envía
+    // después de responder, así una demora de Resend no deja al usuario esperando.
+    after(async () => {
+      try {
+        await enviarVale2x1(entrada);
+      } catch (emailError) {
+        console.error('Error enviando email del vale 2x1:', emailError);
+      }
+    });
 
     return NextResponse.json({ id: entrada.id });
   } catch (err) {
