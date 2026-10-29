@@ -5,6 +5,44 @@ const client = new MercadoPagoConfig({
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN as string
 });
 
+// Compra directa con tarjeta: sin datos previos, el pagador completa su mail en Mercado Pago.
+// El webhook crea el ticket al aprobarse el pago (external_reference con prefijo "web:").
+export const PREFIJO_REFERENCIA_DIRECTA = 'web:';
+
+export const requestPreferenceDirecta = async (referencia: string) => {
+
+    const preference = new Preference(client);
+
+    try {
+        const response = await preference.create({
+            body: {
+                items: [
+                    {
+                        id: 'TICKET_FIESTA_PAGANA_01',
+                        title: 'Entrada General - Fiesta Pagana',
+                        quantity: 1,
+                        unit_price: 12000,
+                        currency_id: 'ARS',
+                    }
+                ],
+                back_urls: {
+                    success: `${process.env.NEXT_PUBLIC_SITE_URL}/success`,
+                    failure: `${process.env.NEXT_PUBLIC_SITE_URL}/`,
+                    pending: `${process.env.NEXT_PUBLIC_SITE_URL}/`,
+                },
+                auto_return: 'all',
+                notification_url: `${process.env.NEXT_PUBLIC_SITE_URL}/api/webhook`,
+                external_reference: `${PREFIJO_REFERENCIA_DIRECTA}${referencia}`
+            }
+        });
+
+        return response.init_point;
+    } catch (error) {
+        console.error("Error Mercado Pago", error);
+        throw new Error('Error creando la preferencia de pago');
+    }
+};
+
 export const requestPreference = async (name: string, email: string, ticketId: string) => {
 
     const preference = new Preference(client);

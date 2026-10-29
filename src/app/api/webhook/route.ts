@@ -3,7 +3,14 @@ import { MercadoPagoConfig, Payment } from 'mercadopago';
 import { supabaseServer } from '@/lib/supabase';
 import { Resend } from 'resend';
 import { PREFIJO_REFERENCIA_2X1, type Entrada2x1 } from '@/lib/promo2x1';
+import { PREFIJO_REFERENCIA_DIRECTA } from '@/lib/mercadopago';
 import { enviarVale2x1 } from '@/lib/email2x1';
+
+type TicketRow = {
+  id: string;
+  nombre_comprador: string;
+  email_comprador: string;
+};
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN as string
@@ -47,20 +54,55 @@ export async function POST(req: Request) {
             }
           }
         } else if (ticketId) {
-          const { data: updatedTicket, error } = await supabaseServer
-            .from('tickets')
-            .update({
-              estado_pago: 'approved',
-              mercadopago_payment_id: String(dataID),
-            })
-            .eq('id', ticketId)
-            .eq('estado_pago', 'pending')
-            .select()
-            .single();
+          let updatedTicket: TicketRow | null = null;
+          let error: { code?: string } | null = null;
+
+          if (ticketId.startsWith(PREFIJO_REFERENCIA_DIRECTA)) {
+            // Compra directa con tarjeta (sin formulario): el ticket se crea con los datos que dejó el pagador en Mercado Pago
+            const { data: yaRegistrado } = await supabaseServer
+              .from('tickets')
+              .select('id')
+              .eq('mercadopago_payment_id', String(dataID))
+              .maybeSingle();
+
+            if (!yaRegistrado) {
+              const payer = paymentInfo.payer;
+              const nombrePagador = [payer?.first_name, payer?.last_name].filter(Boolean).join(' ');
+
+              const resultado = await supabaseServer
+                .from('tickets')
+                .insert({
+                  nombre_comprador: nombrePagador || 'Comprador Mercado Pago',
+                  email_comprador: payer?.email || 'sin-email',
+                  estado_pago: 'approved',
+                  monto: paymentInfo.transaction_amount,
+                  mercadopago_payment_id: String(dataID),
+                })
+                .select()
+                .single();
+
+              updatedTicket = resultado.data as TicketRow | null;
+              error = resultado.error;
+            }
+          } else {
+            const resultado = await supabaseServer
+              .from('tickets')
+              .update({
+                estado_pago: 'approved',
+                mercadopago_payment_id: String(dataID),
+              })
+              .eq('id', ticketId)
+              .eq('estado_pago', 'pending')
+              .select()
+              .single();
+
+            updatedTicket = resultado.data as TicketRow | null;
+            error = resultado.error;
+          }
 
           if (error) {
             console.error('Error actualizando DB', error);
-          } else if (updatedTicket) {
+          } else if (updatedTicket && updatedTicket.email_comprador.includes('@')) {
             try {
               // Generamos el link con el email encodeado para evitar problemas con caracteres especiales
               const magicLink = `https://f-pagana.vercel.app/?user=${encodeURIComponent(updatedTicket.email_comprador)}`;
