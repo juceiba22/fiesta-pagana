@@ -3,7 +3,8 @@
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { supabaseServer } from '@/lib/supabase';
-import { generarCodigo, normalizarCodigo } from '@/lib/promo2x1';
+import { generarCodigo, liberarUso, normalizarCodigo, type Entrada2x1 } from '@/lib/promo2x1';
+import { enviarVale2x1 } from '@/lib/email2x1';
 
 // Las Server Actions se pueden invocar con un POST directo, así que se revalida
 // el Basic Auth del panel dentro de cada una (igual que middleware.ts).
@@ -35,6 +36,55 @@ export async function crearCodigo2x1(formData: FormData) {
   });
 
   if (error) console.error('Error creando código 2x1', error);
+
+  revalidatePath('/admin');
+}
+
+// Verificada la transferencia en el banco: habilita el vale y avisa por mail.
+export async function aprobarVale2x1(formData: FormData) {
+  await exigirAdmin();
+
+  const id = String(formData.get('id') ?? '');
+
+  const { data: vale, error } = await supabaseServer
+    .from('entradas_2x1')
+    .update({ estado_pago: 'approved' })
+    .eq('id', id)
+    .eq('metodo', 'transferencia')
+    .eq('estado_pago', 'pending')
+    .select('*')
+    .maybeSingle();
+
+  if (error) console.error('Error aprobando vale 2x1', error);
+
+  if (vale) {
+    try {
+      await enviarVale2x1(vale as Entrada2x1);
+    } catch (emailError) {
+      console.error('Error enviando email del vale 2x1:', emailError);
+    }
+  }
+
+  revalidatePath('/admin');
+}
+
+// No se encontró la transferencia: se elimina el vale pendiente y se devuelve el uso del código.
+export async function rechazarVale2x1(formData: FormData) {
+  await exigirAdmin();
+
+  const id = String(formData.get('id') ?? '');
+
+  const { data: vale, error } = await supabaseServer
+    .from('entradas_2x1')
+    .delete()
+    .eq('id', id)
+    .eq('metodo', 'transferencia')
+    .eq('estado_pago', 'pending')
+    .select('codigo')
+    .maybeSingle();
+
+  if (error) console.error('Error rechazando vale 2x1', error);
+  if (vale) await liberarUso(vale.codigo);
 
   revalidatePath('/admin');
 }

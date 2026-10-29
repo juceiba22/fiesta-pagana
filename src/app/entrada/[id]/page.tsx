@@ -1,5 +1,6 @@
 import { supabaseServer } from '@/lib/supabase';
 import { QRCodeSVG } from 'qrcode.react';
+import AutoRefresh from './AutoRefresh';
 
 export const dynamic = 'force-dynamic';
 
@@ -21,9 +22,14 @@ export default async function EntradaPage({ params }: { params: Promise<{ id: st
   if (vale && vale.estado_pago !== 'approved') {
     return (
       <main className="relative min-h-screen flex flex-col items-center justify-center bg-[#030303] px-6 text-center">
-        <h1 className="text-neutral-300 text-2xl font-cinzel-dec tracking-widest mb-4">Pago pendiente</h1>
-        <p className="text-neutral-500 tracking-widest text-sm">
-          Estamos esperando la confirmación de Mercado Pago. Recargá esta página en unos instantes.
+        <AutoRefresh />
+        <h1 className="text-neutral-300 text-2xl font-cinzel-dec tracking-widest mb-4">
+          {vale.metodo === 'transferencia' ? 'Verificando tu transferencia' : 'Pago pendiente'}
+        </h1>
+        <p className="text-neutral-500 tracking-widest text-sm max-w-sm leading-relaxed">
+          {vale.metodo === 'transferencia'
+            ? 'Estamos chequeando que haya llegado tu transferencia. Apenas la confirmemos, acá aparece tu código QR y te lo mandamos por mail. Esta página se actualiza sola.'
+            : 'Estamos esperando la confirmación de Mercado Pago. Esta página se actualiza sola.'}
         </p>
       </main>
     );

@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Confirmacion() {
   return (
     <main className="relative min-h-screen flex items-center justify-center bg-[#030303] overflow-hidden selection:bg-neutral-800 selection:text-neutral-300">
@@ -35,9 +37,9 @@ export default function Confirmacion() {
           </p>
           <p className="text-neutral-500 text-xs md:text-sm font-light tracking-[0.1em] leading-loose mt-8">
             ¿Tenés un código 2x1?{' '}
-            <a href="/" className="text-neutral-300 underline hover:text-white transition-colors">
+            <Link href="/" className="text-neutral-300 underline hover:text-white transition-colors">
               Ingresalo acá para obtener tu vale por 2
-            </a>
+            </Link>
           </p>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { supabaseServer } from '@/lib/supabase';
 import type { Codigo2x1, Entrada2x1 } from '@/lib/promo2x1';
-import { crearCodigo2x1, alternarCodigo2x1 } from './actions';
+import { crearCodigo2x1, alternarCodigo2x1, aprobarVale2x1, rechazarVale2x1 } from './actions';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,6 +28,7 @@ export default async function AdminDashboard() {
   const codigos = (codigosData ?? []) as Codigo2x1[];
   const vales = (valesData ?? []) as Entrada2x1[];
   const valesAprobados = vales.filter(v => v.estado_pago === 'approved');
+  const transferenciasPorVerificar = vales.filter(v => v.metodo === 'transferencia' && v.estado_pago === 'pending').length;
   const recaudacionVales = valesAprobados.reduce((acc, curr) => acc + Number(curr.monto), 0);
 
   return (
@@ -59,6 +60,11 @@ export default async function AdminDashboard() {
             <div className="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-xl">
               <p className="text-neutral-400 font-light">Vales 2x1 emitidos (2 entradas c/u)</p>
               <p className="text-4xl font-bold mt-2 text-blue-400">{valesAprobados.length}</p>
+              {transferenciasPorVerificar > 0 && (
+                <p className="text-sm mt-2 text-yellow-500">
+                  {transferenciasPorVerificar} transferencia{transferenciasPorVerificar > 1 ? 's' : ''} por verificar
+                </p>
+              )}
             </div>
             <div className="bg-neutral-900 p-6 rounded-2xl border border-neutral-800 shadow-xl">
               <p className="text-neutral-400 font-light">Recaudado en vales 2x1</p>
@@ -149,12 +155,14 @@ export default async function AdminDashboard() {
                     <th className="p-4">Método</th>
                     <th className="p-4">Estado</th>
                     <th className="p-4">Ingresaron</th>
+                    <th className="p-4">Comprobante</th>
+                    <th className="p-4">Verificar transferencia</th>
                   </tr>
                 </thead>
                 <tbody className="text-sm">
                   {!vales.length && (
                     <tr>
-                      <td colSpan={7} className="p-10 text-center text-neutral-500 italic">
+                      <td colSpan={9} className="p-10 text-center text-neutral-500 italic">
                         No hay vales 2x1 emitidos.
                       </td>
                     </tr>
@@ -179,6 +187,25 @@ export default async function AdminDashboard() {
                         </span>
                       </td>
                       <td className="p-4 text-neutral-300">{v.ingresos} / {v.cantidad}</td>
+                      <td className="p-4 text-neutral-400 text-xs">{v.comprobante || '---'}</td>
+                      <td className="p-4">
+                        {v.metodo === 'transferencia' && v.estado_pago === 'pending' && (
+                          <div className="flex gap-3">
+                            <form action={aprobarVale2x1}>
+                              <input type="hidden" name="id" value={v.id} />
+                              <button type="submit" className="px-3 py-1 text-xs font-semibold bg-green-600 hover:bg-green-500 text-white rounded">
+                                Aprobar
+                              </button>
+                            </form>
+                            <form action={rechazarVale2x1}>
+                              <input type="hidden" name="id" value={v.id} />
+                              <button type="submit" className="px-3 py-1 text-xs font-semibold bg-neutral-800 hover:bg-red-900 text-neutral-300 rounded">
+                                Rechazar
+                              </button>
+                            </form>
+                          </div>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>

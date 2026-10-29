@@ -11,6 +11,7 @@ export default function Home() {
   const [email, setEmail] = useState('');
   const [nombre, setNombre] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [comprobante, setComprobante] = useState('');
   const [codigoValido, setCodigoValido] = useState<boolean | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [copied, setCopied] = useState(false);
@@ -86,7 +87,11 @@ export default function Home() {
   // "Ya transferí": con un código 2x1 válido se emite al instante el vale por 2
   const handleTransferido = async () => {
     if (!datosDelVale()) return;
-    const data = await llamarApi('/api/redeem-2x1', { nombre, email, codigo });
+    if (comprobante.trim().length < 3) {
+      setErrorMsg("Ingresá el número de operación o el titular de la transferencia.");
+      return;
+    }
+    const data = await llamarApi('/api/redeem-2x1', { nombre, email, codigo, comprobante });
     if (data?.id) window.location.href = `/entrada/${data.id}`;
     else if (data) { setErrorMsg("No pudimos generar tu vale."); setLoading(false); }
   };
@@ -197,9 +202,24 @@ export default function Home() {
             </p>
 
             {tieneCodigo ? (
-              <button type="button" disabled={loading} onClick={handleTransferido} className={buttonClass}>
-                YA TRANSFERÍ
-              </button>
+              <>
+                <div className="space-y-2 text-left">
+                  <label className={labelClass}>Nº de operación o titular</label>
+                  <input
+                    type="text"
+                    placeholder="Para encontrar tu transferencia"
+                    className={inputClass}
+                    value={comprobante}
+                    onChange={(e) => setComprobante(e.target.value)}
+                  />
+                </div>
+                <button type="button" disabled={loading} onClick={handleTransferido} className={buttonClass}>
+                  YA TRANSFERÍ
+                </button>
+                <p className="text-neutral-500 text-xs tracking-wider leading-relaxed">
+                  Verificamos tu transferencia y habilitamos tu vale. Te avisamos por mail.
+                </p>
+              </>
             ) : (
               <p className="text-neutral-500 text-xs tracking-wider leading-relaxed">
                 Compartile el comprobante a alguien del staff de la Fiesta Pagana y te anotamos en la lista.

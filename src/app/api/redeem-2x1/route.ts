@@ -1,4 +1,4 @@
-import { NextResponse, after } from 'next/server';
+import { NextResponse } from 'next/server';
 import {
   buscarEntradaExistente,
   consumirUso,
@@ -6,16 +6,24 @@ import {
   liberarUso,
   normalizarCodigo,
 } from '@/lib/promo2x1';
-import { enviarVale2x1 } from '@/lib/email2x1';
 
-// "Ya transferí": con un código 2x1 válido se emite al instante un vale por 2 entradas.
+// "Ya transferí": con un código 2x1 válido se registra el vale por 2 entradas como PENDIENTE.
+// Queda habilitado (y se envía el mail) recién cuando el admin verifica la transferencia.
 export async function POST(req: Request) {
   try {
-    const { nombre, email, codigo } = await req.json();
+    const { nombre, email, codigo, comprobante } = await req.json();
     const codigoNormalizado = normalizarCodigo(codigo);
+    const referencia = typeof comprobante === 'string' ? comprobante.trim().slice(0, 120) : '';
 
     if (!nombre || !email || !codigoNormalizado) {
       return NextResponse.json({ error: 'Faltan datos' }, { status: 400 });
+    }
+
+    if (referencia.length < 3) {
+      return NextResponse.json(
+        { error: 'Ingresá el número de operación o el titular de la transferencia' },
+        { status: 400 }
+      );
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -37,22 +45,13 @@ export async function POST(req: Request) {
       nombre,
       email,
       metodo: 'transferencia',
+      comprobante: referencia,
     });
 
     if (!entrada) {
       await liberarUso(codigoNormalizado);
       return NextResponse.json({ error: 'Error guardando en BD' }, { status: 500 });
     }
-
-    // El vale ya está emitido y se muestra en pantalla: el mail es un respaldo y se envía
-    // después de responder, así una demora de Resend no deja al usuario esperando.
-    after(async () => {
-      try {
-        await enviarVale2x1(entrada);
-      } catch (emailError) {
-        console.error('Error enviando email del vale 2x1:', emailError);
-      }
-    });
 
     return NextResponse.json({ id: entrada.id });
   } catch (err) {

@@ -28,6 +28,7 @@ export type Entrada2x1 = {
   cantidad: number;
   ingresos: number;
   mercadopago_payment_id: string | null;
+  comprobante: string | null;
   created_at: string;
 };
 
@@ -99,8 +100,9 @@ export async function crearEntrada(params: {
   nombre: string;
   email: string;
   metodo: Metodo2x1;
+  comprobante?: string;
 }): Promise<Entrada2x1 | null> {
-  const { codigo, nombre, email, metodo } = params;
+  const { codigo, nombre, email, metodo, comprobante } = params;
   const { data, error } = await supabaseServer
     .from('entradas_2x1')
     .insert({
@@ -108,7 +110,9 @@ export async function crearEntrada(params: {
       nombre: nombre.trim(),
       email: normalizarEmail(email),
       metodo,
-      estado_pago: metodo === 'transferencia' ? 'approved' : 'pending',
+      // Mercado Pago se aprueba por webhook; la transferencia, a mano desde el admin.
+      estado_pago: 'pending',
+      ...(comprobante ? { comprobante } : {}),
       monto: metodo === 'transferencia' ? PRECIO_2X1 : PRECIO_2X1 + RECARGO_MERCADOPAGO,
       cantidad: ENTRADAS_POR_VALE,
     })
